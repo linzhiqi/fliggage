@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html ng-app='myApp'>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Share Your Baggage</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/jumbotron-narrow.css">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css">
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-resource/angular-resource.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/angular-resource/angular-resource.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/services.js"></script>
+  <script src="js/controllers.js"></script>
+  <script src="js/directives.js"></script>
+  <script>
+    var autocomplete_from;
+    var autocomplete_to;
+    var countryRestrict = {};
+    var place_type_filter = '(cities)';
+    function initialize() {
+
+    autocomplete_from = new google.maps.places.Autocomplete(document.getElementById('fromLocationInput'), {
+      types: [ place_type_filter ],
+      componentRestrictions: countryRestrict
+    });
+    autocomplete_from.setComponentRestrictions([]);
+    autocomplete_to = new google.maps.places.Autocomplete(document.getElementById('toLocationInput'), {
+      types: [ place_type_filter ],
+      componentRestrictions: countryRestrict
+    });
+
+    google.maps.event.addListener(autocomplete_from, 'place_changed', onFromPlaceChanged);
+    
+    google.maps.event.addListener(autocomplete_to, 'place_changed', onToPlaceChanged);
+  }
+  function onFromPlaceChanged() {
+    if(autocomplete_from){
+      var place = autocomplete_from.getPlace();
+      var formatted_address = place.formatted_address;
+      console.log(formatted_address);
+      document.getElementById('fromLocationInput').value=formatted_address;
+    }
+  }
+  function onToPlaceChanged() {
+    if(autocomplete_to){
+      var place = autocomplete_to.getPlace();
+      var formatted_address = place.formatted_address;
+      console.log(formatted_address);
+      document.getElementById('toLocationInput').value=formatted_address;
+    }
+  }
+
+
+
+/*
+      var place = autocomplete.getPlace();
+      for (var i = 0; i < place.address_components.length; i++) {
+        console.log( place.address_components[i]);
+      }*/
+
+  </script>
+  <!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+  -->
+
+
+</head>
+<body onload="initialize()">
+
+
+  <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation"><a href="#">Sign in</a></li>
+            <li role="presentation"><a href="#">Sign up</a></li>
+            <li role="presentation"><a href="#">About</a></li>
+            <li role="presentation"><a href="#">Contact</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">Share Your Baggage</h3>
+      </div>
+      <div ng-controller="BaggagesCtrl">
+      <div class="jumbotron">
+        <h1>Need a ride?</h1>
+        <p class="lead">Search here to see if someone nearby is sharing a baggage to the destination. If there is no city matched, it will automaticall use provice or country for the search.</p>
+
+        <form>
+          <div class="form-group">
+            <label class="app-input-label"for="fromLocationInput">From city</label>
+            <input type="text" class="app-input form-control" id="fromLocationInput" placeholder="beijing,china" ng-model='from' force-model-update>
+          </div>
+          <div class="form-group">
+            <label class="app-input-label" for="toLocationInput">To city</label>
+            <input type="text" class="app-input form-control" id="toLocationInput" placeholder="helsinki,finland" ng-model='to' force-model-update>
+          </div>
+          <button type="submit" class="btn btn-default btn-success" ng-click="searchBaggages()">Search</button>
+        </form>
+      </div>
+
+      <div class="row marketing">
+        <div class="col-lg-10">
+          <div ng-repeat="baggage in baggages">
+            <h4>Subheading</h4>
+            <p>{{baggage.weight}}kg baggage from {{baggage.from}} to {{baggage.to}} provided by {{baggage.provider}}</p>
+          </div>
+        </div>
+
+
+      </div>
+      </div><!-- end of BaggagesCtrl div -->
+
+      <footer class="footer">
+        <p>&copy; Company 2014</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+
+</body>
+</html>
