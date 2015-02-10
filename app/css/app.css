@@ -59,3 +59,12 @@
   background-image: url('../img/baggage2.png');
   background-size: 33% 50%;
 }
+
+.glyphicon.glyphicon-user {
+    font-size: 3.5em;
+  vertical-align: middle;
+}
+
+.baggage-list-element{
+ padding-top: 5px;
+}
