@@ -1,0 +1,24 @@
+    <div class="page-header text-center">
+        <h1><span class="fa fa-anchor"></span> Request Page</h1>
+    </div>
+
+    <div class="row">
+
+        <!-- LOCAL INFORMATION -->
+        <div class="col-sm-12">
+            <div class="well">
+                <h3><img ng-src="{{baggage.providerImage}}"/> {{baggage.providerName}}</h3>
+
+                    <p>
+                        <strong>weight</strong>: {{baggage.weight}} kg<br>
+                        <strong>length</strong>: {{baggage.space[0]}}  <strong>width</strong>: {{baggage.space[1]}}  <strong>height</strong>: {{baggage.space[2]}}<br>
+                        <strong>from</strong>: {{baggage.from}}<br>
+                        <strong>accept request before(timezone of your browser)</strong>: {{baggage.accesptBefore | date: 'medium'}}<br>
+                        <strong>to</strong>: {{baggage.to}}<br>
+                        <strong>arrive after(timezone of your browser)</strong>: {{baggage.arriveAfter | date: 'medium'}}<br>
+                    </p>
+
+            </div>
+        </div>
+
+    </div>

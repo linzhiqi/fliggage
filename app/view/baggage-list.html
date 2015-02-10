@@ -1,0 +1,28 @@
+    
+<div >
+  <div class="jumbotron" id="search-area">
+    <h2>Need a ride for your stuff?</h2>
+    <form>
+      <div class="form-group">
+        <label class="app-input-label"for="fromLocationInput">From city</label>
+        <input type="text" class="app-input form-control" id="fromLocationInput" placeholder="beijing,china" ng-model='from' force-model-update>
+      </div>
+      <div class="form-group">
+        <label class="app-input-label" for="toLocationInput">To city</label>
+        <input type="text" class="app-input form-control" id="toLocationInput" placeholder="helsinki,finland" ng-model='to' force-model-update>
+      </div>
+      <button type="submit" class="btn btn-success fa fa-search" ng-click="searchBaggages()"> Search</button>
+    </form>
+
+  </div>
+
+  <ul>
+
+      <li ng-repeat="baggage in baggages" >
+        <span><a href="#/baggage/{{baggage._id}}"><img ng-src="{{baggage.providerImage}}"/> {{baggage.providerName}} providing {{baggage.weight}}kg baggage from {{baggage.from}} to {{baggage.to}}</a></span>
+      </li>
+ 
+  </ul>
+</div>
+
+

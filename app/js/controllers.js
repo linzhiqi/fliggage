@@ -4,23 +4,30 @@
 
 var appControllers = angular.module('appControllers', []);
 
-appControllers.controller('BaggagesCtrl', ['$scope', 'Baggage',
-  function($scope, Baggage) {
-    var defaultBaggages= [
-      {fromLoc: 'Deyang, Sichuan, China',
-       toLoc: 'Helsinki, Finland' 
-      },
-      {fromLoc: 'Deyang, Sichuan, China',
-       toLoc: 'Helsinki, Finland' 
-      },
-      {fromLoc: 'Deyang, Sichuan, China',
-       toLoc: 'Helsinki, Finland' 
-      },
-      {fromLoc: 'Deyang, Sichuan, China',
-       toLoc: 'Helsinki, Finland' 
-      }
-    ];
-    $scope.baggages = Baggage.query();
+appControllers.controller('HeaderCtrl', ['$scope', '$rootScope', '$location','$localStorage',
+  function($scope, $rootScope, $location, $localStorage) {
+    if($localStorage.token && $localStorage.profile) {
+      console.log('localstorage is true.');
+      $rootScope.signedIn = true;
+      $rootScope.userName = $localStorage.profile.name;
+      $rootScope.userImage = $localStorage.profile.image;    
+    }
+
+    $scope.logout = function() {
+      delete $localStorage.profile;
+      delete $localStorage.token;
+      $rootScope.signedIn = false;
+      $rootScope.userName ='';
+      $rootScope.userImage = '';
+    };
+  }]
+);
+
+appControllers.controller('BaggageListCtrl', ['$scope', 'BaggageOnLocation',
+  function($scope, BaggageOnLocation) {
+   
+    $scope.baggages = BaggageOnLocation.query();
+    console.log("BaggageListCtrl triggered.");
     console.log($scope.baggages);
     //$scope.baggages = defaultBaggages;
     $scope.orderProp = 'age';
@@ -35,11 +42,10 @@ appControllers.controller('BaggagesCtrl', ['$scope', 'Baggage',
       $scope.baggages=[];
   
       fromStruct = $scope.from.split(',');
-      console.log(fromStruct);
       for(var i in fromStruct){
         fromStruct[i]=fromStruct[i].trim();
       };
-      console.log(fromStruct);
+
       toStruct = $scope.to.split(',');
       for(var i in toStruct){
         toStruct[i]=toStruct[i].trim();
@@ -50,7 +56,7 @@ appControllers.controller('BaggagesCtrl', ['$scope', 'Baggage',
 
 
       console.log('from0:'+curFrom0+' to0:'+curTo0);
-      Baggage.getMatched({fromLoc: curFrom0, toLoc:curTo0}, function(baggages) {
+      BaggageOnLocation.getMatched({fromLoc: curFrom0, toLoc:curTo0}, function(baggages) {
         Array.prototype.push.apply($scope.baggages,baggages);
         var changed1 = false;
         var curFrom1 = curFrom0;
@@ -66,7 +72,7 @@ appControllers.controller('BaggagesCtrl', ['$scope', 'Baggage',
         }
         if (changed1 === true) {
           console.log('from1:'+curFrom1+' to1:'+curTo1);
-          Baggage.getMatched({fromLoc: curFrom1, toLoc:curTo1}, function(baggages) {
+          BaggageOnLocation.getMatched({fromLoc: curFrom1, toLoc:curTo1}, function(baggages) {
             Array.prototype.push.apply(round1,baggages);
             mergeBaggage($scope.baggages,round1);
             
@@ -83,7 +89,7 @@ appControllers.controller('BaggagesCtrl', ['$scope', 'Baggage',
             }
             if (changed2 === true) {
               console.log('from2:'+curFrom2+' to2:'+curTo2);
-              Baggage.getMatched({fromLoc: curFrom2, toLoc:curTo2}, function(baggages) {
+              BaggageOnLocation.getMatched({fromLoc: curFrom2, toLoc:curTo2}, function(baggages) {
                 Array.prototype.push.apply(round2,baggages);
                 mergeBaggage($scope.baggages,round2);
               });
@@ -107,6 +113,127 @@ appControllers.controller('BaggagesCtrl', ['$scope', 'Baggage',
       });
       Array.prototype.push.apply(to, squeezed);
     }
+
+    setAutoComplete();
+
+
 }]);
 
+function setAutoComplete() {
+ // initialize google place autocomplete
+
+    var autocomplete_from;
+    var autocomplete_to;
+    var countryRestrict = {};
+    var place_type_filter = '(cities)';
+
+  function onFromPlaceChanged() {
+    if(autocomplete_from){
+      var place = autocomplete_from.getPlace();
+      var formatted_address = place.formatted_address;
+      console.log(formatted_address);
+      document.getElementById('fromLocationInput').value=formatted_address;
+    }
+  }
+  function onToPlaceChanged() {
+    if(autocomplete_to){
+      var place = autocomplete_to.getPlace();
+      var formatted_address = place.formatted_address;
+      console.log(formatted_address);
+      document.getElementById('toLocationInput').value=formatted_address;
+    }
+  }
+
+    var autoCompleteInit =function initialize() {
+
+    autocomplete_from = new google.maps.places.Autocomplete(document.getElementById('fromLocationInput'), {
+      types: [ place_type_filter ],
+      componentRestrictions: countryRestrict
+    });
+    autocomplete_from.setComponentRestrictions([]);
+    autocomplete_to = new google.maps.places.Autocomplete(document.getElementById('toLocationInput'), {
+      types: [ place_type_filter ],
+      componentRestrictions: countryRestrict
+    });
+
+    google.maps.event.addListener(autocomplete_from, 'place_changed', onFromPlaceChanged);
+    
+    google.maps.event.addListener(autocomplete_to, 'place_changed', onToPlaceChanged);
+  }();
+
+};
+
+
+appControllers.controller('BaggageDetailCtrl', ['$scope', 'BaggageOnId', '$routeParams',
+  function($scope, BaggageOnId, $routeParams) {
+    BaggageOnId.get({id: $routeParams.baggageId}, function(baggage) {
+      console.log('this baggage: '+JSON.stringify(baggage));
+      $scope.baggage = baggage;
+    });
+  }
+
+]);
+
+appControllers.controller('BaggagePostOfferCtrl', ['$scope', 'BaggageOnId', '$location','$localStorage',
+  function($scope, BaggageOnId, $location, $localStorage) {
+    if(!$localStorage.token || !$localStorage.profile){
+      alert('Posting offer requires signin.');
+      $location.path('/signin');
+      return;
+    }
+
+    $scope.onAcceptBeforeTimeSet = function(newDate, oldDate){
+      console.log('AcceptBefore:'+newDate);
+      $scope.baggage.accesptBefore = Date.parse(newDate);
+    }
+
+    $scope.onArriveAfterTimeSet = function(newDate, oldDate){
+       console.log('ArriveAfter:'+newDate);
+       $scope.baggage.arriveAfter = Date.parse(newDate);
+    }
+
+    $scope.baggage={space: []};
+    setAutoComplete();
+    $scope.postBaggage = function() {
+      $scope.$broadcast('event:force-model-update');
+      $scope.baggage.space[0]=$scope.length;
+      $scope.baggage.space[1]=$scope.width;
+      $scope.baggage.space[2]=$scope.height;
+      $scope.baggage.uid=$localStorage.profile._id;
+      console.log('posting baggage: '+JSON.stringify($scope.baggage));
+      BaggageOnId.save(JSON.stringify($scope.baggage), function(){
+        console.log('posted baggage: '+JSON.stringify($scope.baggage));
+        alert('baggage is saved.');
+        $location.path('');
+      });
+    }
+  }
+]);
+
+/*
+appControllers.controller('SignInCtrl', ['$scope', 'SignInGoogle', '$localStorage',
+  function($scope, SignInGoogle, $localStorage) {
+    $scope.signInGoogle = function(){
+      SignInGoogle.get( function(token) {
+      console.log('token: '+token);
+      $localStorage.token = token;
+    });}
+  }
+]);
+*/
+
+
+appControllers.controller('GetUserCtrl', ['$scope', '$rootScope', '$localStorage', '$routeParams','$location', 'UserProfile',
+  function($scope, $rootScope, $localStorage, $routeParams, $location, UserProfile) {
+    console.log('token: '+$routeParams.token);
+    $localStorage.token = $routeParams.token;
+    UserProfile.get({}, function(user){
+      $localStorage.profile = user;
+      $rootScope.signedIn = true;
+      $rootScope.userName = user.name;
+      $rootScope.userImage = user.image;
+    });
+    $location.path('');
+  }
+]);
 

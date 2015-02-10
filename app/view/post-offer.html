@@ -1,0 +1,71 @@
+<div class="row">
+<div class="col-sm-10 col-sm-offset-1">
+
+    <h1><span class="fa fa-sign-in"></span> Post a new baggage offer</h1>
+
+    <!-- LOGIN FORM -->
+    <form>
+      <fieldset>
+        <legend>Schedule:</legend>
+      <div class="form-group">
+        <label class="app-input-label"for="fromLocationInput">From city </label>
+        <input type="text" class="app-input form-control" id="fromLocationInput" placeholder="city, province(optional), country" ng-model='baggage.from' force-model-update>
+      </div>
+      <div class="form-group date-picker">
+        <label class="app-input-label" for="acceptBeforeInput">Accept request before </label>
+        <div class="dropdown">
+          <a class="dropdown-toggle " id="dropdown1" role="button" data-toggle="dropdown" data-target="#" href="#/post-offer">
+            <div class="input-group" style="width: 60%"><input type="text" class="form-control" id="acceptBeforeInput" placeholder="use date picker, don't manually type" data-ng-model="data.acceptBeforeInput"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+          </a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <datetimepicker data-ng-model="data.acceptBeforeInput" data-on-set-time="onAcceptBeforeTimeSet(newDate, oldDate)" data-datetimepicker-config="{ minuteStep: 10, dropdownSelector: '#dropdown1' }"/>
+          </ul>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="app-input-label" for="toLocationInput">To city </label>
+        <input type="text" class="app-input form-control" id="toLocationInput" placeholder="city, province(optional), country" ng-model='baggage.to' force-model-update>
+      </div>
+      <div class="form-group date-picker">
+        <label class="app-input-label" for="arriveAfterInput">Arrive after </label>
+        <div class="dropdown">
+          <a class="dropdown-toggle " id="dropdown2" role="button" data-toggle="dropdown" data-target="#" href="#/post-offer">
+            <div class="input-group" style="width: 60%"><input type="text" class="form-control" id="arriveAfterInput" placeholder="use date picker, don't manually type" data-ng-model="data.arriveAfterInput"><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+            </div>
+          </a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <datetimepicker data-ng-model="data.arriveAfterInput" data-on-set-time="onArriveAfterTimeSet(newDate, oldDate)" data-datetimepicker-config="{ minuteStep: 10, dropdownSelector: '#dropdown2' }"/>
+          </ul>
+        </div>
+      </div>
+      </fieldset>
+      <fieldset>
+        <legend>Baggage info:</legend>
+      <div class="form-group">
+        <label class="app-input-label" for="weightInput">Weight(kg) </label>
+        <input type="text" class="app-input form-control" id="weightInput" ng-model='baggage.weight'>
+      </div>
+      <div class="form-group">
+        <label class="app-input-label" for="lengthInput">Length(cm) </label>
+        <input type="text" class="app-input form-control" id="lengthInput" ng-model='length'>
+      </div>
+      <div class="form-group">
+        <label class="app-input-label" for="widthInput">Width(cm) </label>
+        <input type="text" class="app-input form-control" id="widthInput" ng-model='width'>
+      </div>
+      <div class="form-group">
+        <label class="app-input-label" for="heightInput">Height(cm) </label>
+        <input type="text" class="app-input form-control" id="heightInput" ng-model='height'>
+      </div>
+      <div class="form-group">
+        <label class="app-input-label" for="extraInforInput">Additional info </label>
+        <input type="text" class="app-input form-control" id="extraInforInput" ng-model='baggage.info'>
+      </div>
+      <fieldset>
+      <button type="submit" class="btn btn-success" ng-click="postBaggage()"> Post the offer</button>
+    </form>
+    <br>
+</div>
+</div>
+
