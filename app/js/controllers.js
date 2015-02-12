@@ -10,7 +10,8 @@ appControllers.controller('HeaderCtrl', ['$scope', '$rootScope', '$location','$l
       console.log('localstorage is true.');
       $rootScope.signedIn = true;
       $rootScope.userName = $localStorage.profile.name;
-      $rootScope.userImage = $localStorage.profile.image;    
+      $rootScope.userImage = $localStorage.profile.image;  
+      $rootScope.userId = $localStorage.profile._id;
     }
 
     $scope.logout = function() {
@@ -19,6 +20,7 @@ appControllers.controller('HeaderCtrl', ['$scope', '$rootScope', '$location','$l
       $rootScope.signedIn = false;
       $rootScope.userName ='';
       $rootScope.userImage = '';
+      $rootScope.userId = '';
     };
   }]
 );
@@ -120,6 +122,9 @@ appControllers.controller('BaggageListCtrl', ['$scope', 'BaggageOnLocation',
 }]);
 
 function setAutoComplete() {
+  if(typeof google !== 'undefined') {
+    return;
+  }
  // initialize google place autocomplete
 
     var autocomplete_from;
@@ -164,17 +169,126 @@ function setAutoComplete() {
 };
 
 
-appControllers.controller('BaggageDetailCtrl', ['$scope', 'BaggageOnId', '$routeParams',
-  function($scope, BaggageOnId, $routeParams) {
-    BaggageOnId.get({id: $routeParams.baggageId}, function(baggage) {
+appControllers.controller('BaggageDetailCtrl', ['$scope', 'BaggageOnId', '$routeParams', 'ngDialog',
+  function($scope, BaggageOnId, $routeParams, ngDialog) {
+
+    $scope.baggageId = $routeParams.baggageId;
+    
+    BaggageOnId.get({id: $scope.baggageId}, function(baggage) {
       console.log('this baggage: '+JSON.stringify(baggage));
       $scope.baggage = baggage;
+      $scope.providerId = baggage.uid;
     });
+    
+    $scope.contactProvider = function() {
+      ngDialog.open({
+        template: './view/message.html',
+        controller: 'ContactCtrl',
+        scope: $scope
+      });
+    };
   }
-
 ]);
 
-appControllers.controller('BaggagePostOfferCtrl', ['$scope', 'BaggageOnId', '$location','$localStorage',
+appControllers.controller('ContactCtrl', ['$scope', '$rootScope', '$location', 'Message', 'MessageOnBaggageAndRequestor', 'ngDialog',
+  function($scope, $rootScope, $location, Message, MessageOnBaggageAndRequestor, ngDialog) {
+    var requestorId = $rootScope.userId===$scope.$parent.currProviderId?$scope.$parent.currToId:$rootScope.userId;
+    $scope.currToRole = $scope.$parent.currToId===$scope.$parent.currProviderId?'provider':'requestor';
+    $scope.currToName = $scope.$parent.currToName;
+    MessageOnBaggageAndRequestor.get({id: requestorId, bid: $scope.$parent.currBaggageId}, function(messages){
+      $scope.messages = messages;
+      console.log("msgs:"+JSON.stringify(messages));
+    });
+
+    $scope.sendMessage = function() {
+      $scope.msg.baggageId = $scope.$parent.currBaggageId;
+      $scope.msg.fromId = $rootScope.userId;
+      $scope.msg.toId = $scope.$parent.currToId;
+      $scope.msg.isFromRequestor = ($rootScope.userId!==$scope.$parent.currProviderId);
+      console.log("message from "+ $scope.msg.isFromRequestor===true?'requestoer':'provider');
+      Message.save($scope.msg, function(data){
+        console.log('msg return: '+JSON.stringify(data));
+       // alert('message is sent');
+        
+      });
+      return true;
+    };
+  }
+]);
+
+appControllers.controller('BaggageDetailCtrl', ['$scope', '$rootScope', '$location', 'BaggageOnId', '$routeParams', 'ngDialog',
+  function($scope, $rootScope, $location, BaggageOnId, $routeParams, ngDialog) {
+
+    $scope.currBaggageId = $routeParams.baggageId;
+    
+    BaggageOnId.get({id: $scope.currBaggageId}, function(baggage) {
+      console.log('this baggage: '+JSON.stringify(baggage));
+      $scope.baggage = baggage;
+      $scope.currProviderId = baggage.uid;
+      $scope.currToId = baggage.uid;
+      $scope.currToName = baggage.providerName;
+    });
+    
+    $scope.contactProvider = function() {
+      if(!$rootScope.signedIn){
+        $location.path('/signin');
+        return;
+      } 
+      ngDialog.open({
+        template: './view/message.html',
+        controller: 'ContactCtrl',
+        scope: $scope
+      });
+    };
+  }
+]);
+
+appControllers.controller('DashboardCtrl', ['$scope', '$rootScope', 'ProviderBaggage', 'RequestorOnBaggage', 'RequestorBaggage', 'ngDialog',
+  function($scope, $rootScope, ProviderBaggage, RequestorOnBaggage, RequestorBaggage, ngDialog) {
+
+    $scope.offerList = [];
+    ProviderBaggage.get({id: $rootScope.userId}, function(baggages) {
+      $scope.offerList = baggages;
+      for(var i in $scope.offerList){
+        (function(index){
+          RequestorOnBaggage.get({id: $scope.offerList[index]._id}, function(requestors){
+            $scope.offerList[index].requestors = requestors;
+          });
+        }(i));
+      }
+    });
+    $scope.requestList = [];
+    RequestorBaggage.get({id: $rootScope.userId}, function(baggages) {
+      $scope.requestList = baggages;
+    });
+    
+    $scope.contactRequestor = function(baggageId, requestorName, requestorId) {
+      $scope.currBaggageId = baggageId;
+      $scope.currToId = requestorId;
+      $scope.currProviderId = $rootScope.userId;
+      $scope.currToName = requestorName;
+      ngDialog.open({
+        template: './view/message.html',
+        controller: 'ContactCtrl',
+        scope: $scope
+      });
+    };
+
+    $scope.contactProvider = function(baggageId, providerName, providerId) {
+      $scope.currBaggageId = baggageId;
+      $scope.currToId = providerId;
+      $scope.currProviderId = providerId;
+      $scope.currToName = providerName;
+      ngDialog.open({
+        template: './view/message.html',
+        controller: 'ContactCtrl',
+        scope: $scope
+      });
+    };
+  }
+]);
+
+appControllers.controller('AccountCtrl', ['$scope', 'BaggageOnId', '$location','$localStorage',
   function($scope, BaggageOnId, $location, $localStorage) {
     if(!$localStorage.token || !$localStorage.profile){
       alert('Posting offer requires signin.');
@@ -232,6 +346,7 @@ appControllers.controller('GetUserCtrl', ['$scope', '$rootScope', '$localStorage
       $rootScope.signedIn = true;
       $rootScope.userName = user.name;
       $rootScope.userImage = user.image;
+      $rootScope.userId = user._id;
     });
     $location.path('');
   }

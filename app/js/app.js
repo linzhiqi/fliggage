@@ -7,9 +7,10 @@ angular.module('myApp', [
   'appDirectives',
   'restServices',
   'ngStorage',
-  'ui.bootstrap.datetimepicker'
-]).config(['$routeProvider', '$httpProvider',
-  function($routeProvider, $httpProvider) {
+  'ui.bootstrap.datetimepicker',
+  'ngDialog'
+]).config(['$routeProvider', '$httpProvider', 'ngDialogProvider',
+  function($routeProvider, $httpProvider, ngDialogProvider) {
     $routeProvider.
       when('/signin', {
         templateUrl: 'view/signin.html'
@@ -33,6 +34,14 @@ angular.module('myApp', [
         templateUrl: 'view/post-offer.html',
         controller: 'BaggagePostOfferCtrl'
       }).
+      when('/dashboard', {
+        templateUrl: 'view/dashboard.html',
+        controller: 'DashboardCtrl'
+      }).
+      when('/account', {
+        templateUrl: 'view/account.html',
+        controller: 'AccountCtrl'
+      }).
       otherwise({
         redirectTo: '/home'
       });
@@ -55,6 +64,12 @@ angular.module('myApp', [
         };
       }
     ]);
-
+    ngDialogProvider.setDefaults({
+        className: 'ngdialog-theme-default width600',
+        plain: false,
+        showClose: true,
+        closeByDocument: true,
+        closeByEscape: true
+    });
   }
 ]);

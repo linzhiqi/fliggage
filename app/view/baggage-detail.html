@@ -7,7 +7,10 @@
         <!-- LOCAL INFORMATION -->
         <div class="col-sm-12">
             <div class="well">
-                <h3><img ng-src="{{baggage.providerImage}}"/> {{baggage.providerName}}</h3>
+                
+
+                    <h3 style="display:inline"><img ng-show="baggage.providerImage"  ng-src="{{baggage.providerImage}}"/><span ng-hide="baggage.providerImage" class="glyphicon glyphicon-user"></span> {{baggage.providerName}}</h3>
+                    <button type="submit" class="btn btn-success btn-lg" ng-click="contactProvider()"> Contact</button>
 
                     <p>
                         <strong>weight</strong>: {{baggage.weight}} kg<br>
@@ -19,6 +22,7 @@
                     </p>
 
             </div>
+            
         </div>
 
     </div>

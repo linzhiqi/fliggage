@@ -2,6 +2,7 @@
 <div >
   <div class="jumbotron" id="search-area">
     <h2>Need a ride for your stuff?</h2>
+    <br>
     <form>
       <div class="form-group">
         <label class="app-input-label"for="fromLocationInput">From city</label>
@@ -18,7 +19,7 @@
 
   <ul>
 
-      <li class="baggage-list-element" ng-repeat="baggage in baggages" >
+      <li class="list-element-padding-top" ng-repeat="baggage in baggages | orderBy: '-time'"" >
         <span><a href="#/baggage/{{baggage._id}}"><img ng-show="baggage.providerImage" ng-src="{{baggage.providerImage}}"/> <span ng-hide="baggage.providerImage" class="glyphicon glyphicon-user"></span> {{baggage.providerName}} providing {{baggage.weight}}kg baggage from {{baggage.from}} to {{baggage.to}}</a></span>
       </li>
  

@@ -1,5 +1,10 @@
 /* app css stylesheet */
 
+ul{
+padding: 15px;
+list-style-type: none;
+}
+
 .menu {
   list-style: none;
   border-bottom: 0.1em solid black;
@@ -47,7 +52,7 @@
 
 .jumbotron .app-input.form-control {
   display: inline-block;
-  width: 50%;
+  width: 75%;
 }
 
 .date-picker .app-input-label{
@@ -55,16 +60,132 @@
   margin-right:5px;
 }
 
+/*
 #search-area{
-  background-image: url('../img/baggage2.png');
-  background-size: 33% 50%;
-}
+  background-image: url('../img/baggage3.gif');
+  background-size:   cover;                      
+  background-repeat: no-repeat;
+}*/
 
 .glyphicon.glyphicon-user {
-    font-size: 3.5em;
+    font-size: 50px;
   vertical-align: middle;
 }
 
-.baggage-list-element{
+.list-element-padding-top{
  padding-top: 5px;
 }
+
+
+.bubble-right
+{
+position: relative;
+vertical-align: top;
+display: inline-block;
+max-width: 350px;
+padding: 3px 10px;
+margin-right: 20px;
+margin-bottom: 15px;
+background: #d7e4ed;
+word-wrap: break-word;
+-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+}
+
+.bubble-right:after 
+{
+content: '';
+position: absolute;
+border-style: solid;
+border-width: 8px 0 8px 15px;
+border-color: transparent #d7e4ed;
+display: block;
+width: 0;
+z-index: 1;
+right: -15px;
+top: 13px;
+}
+
+.bubble-left
+{
+position: relative;
+vertical-align: top;
+display: inline-block;
+max-width: 350px;
+padding: 3px 10px;
+margin-left: 20px;
+margin-bottom: 15px;
+background: #E0E0D1;
+word-wrap: break-word;
+-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+}
+
+.bubble-left:after 
+{
+content: '';
+position: absolute;
+
+border-style: solid;
+border-width: 8px 15px 8px 0;
+border-color: transparent #E0E0D1;
+display: block;
+width: 0;
+z-index: 1;
+left: -15px;
+top: 13px;
+}
+
+.ngdialog.ngdialog-theme-default.width600 .ngdialog-content{
+  width: 600px;
+  max-height: 420px;
+  overflow-y: auto;
+
+}
+
+.chatting-area{
+  margin: 0px 20px;
+}
+
+.message-self{
+  float: left;
+}
+
+.message-other{
+  float: right;
+}
+
+.message-other span{
+  float: right;
+}
+
+
+p.name-time {
+  font-size: 70%;
+    font-style: italic;
+  float: right;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

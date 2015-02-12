@@ -28,4 +28,44 @@ restServices.factory('UserProfile', ['$resource',
   ]
 );
 
+restServices.factory('Message', ['$resource',
+    function($resource){
+      return $resource('http://localhost:3000/message');
+    }
+  ]
+);
 
+restServices.factory('ProviderBaggage', ['$resource',
+    function($resource){
+      return $resource('http://localhost:3000/provider/:id/baggage',{},{get: {method:'GET', isArray:true}});
+    }
+  ]
+);
+
+restServices.factory('RequestorBaggage', ['$resource',
+    function($resource){
+      return $resource('http://localhost:3000/requestor/:id/baggage',{},{get: {method:'GET', isArray:true}});
+    }
+  ]
+);
+
+restServices.factory('MessageOnBaggageAndProvider', ['$resource',
+    function($resource){
+      return $resource('http://localhost:3000/provider/:id/baggage/:bid/message', {},{get: {method:'GET', isArray:true}});
+    }
+  ]
+);
+
+restServices.factory('MessageOnBaggageAndRequestor', ['$resource',
+    function($resource){
+      return $resource('http://localhost:3000/requestor/:id/baggage/:bid/message',{},{get: {method:'GET', isArray:true}});
+    }
+  ]
+);
+
+restServices.factory('RequestorOnBaggage', ['$resource',
+    function($resource){
+      return $resource('http://localhost:3000/baggage/:id/requestor', {},{get: {method:'GET', isArray:true}});
+    }
+  ]
+);

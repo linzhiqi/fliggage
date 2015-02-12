@@ -1,0 +1,20 @@
+<div class="chatting-area" >
+    <h2>To {{currToRole}}: {{currToName}}</h2>
+    <form>
+      <div class="form-group">
+        <textarea class="form-control" id="messageInput" ng-model='msg.content'></textarea>
+      </div>
+      <button type="button" class="btn btn-success" ng-click="sendMessage() && closeThisDialog(0)">Send</button>
+    </form>
+    <ul>
+      <li class="chatting-record row" ng-repeat="message in messages | orderBy: '-time'" >
+        <div ng-class="{'message-self': message.fromId._id===userId, 'message-other': message.fromId._id!==userId}">
+        <span ng-show="message.fromId.image"><img ng-src="{{message.fromId.image}}"/></span> <span ng-hide="message.fromId.image" class="glyphicon glyphicon-user"></span>
+        <div ng-class="{'bubble-left': message.fromId._id===userId, 'bubble-right': message.fromId._id!==userId}">
+          <p>{{message.content}}</p>
+          <p class="name-time">by {{message.fromId.name}} at {{message.time}}</p>
+        </div>
+        </div>
+      </li>
+    </ul>
+</div>

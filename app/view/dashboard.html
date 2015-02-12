@@ -1,0 +1,65 @@
+<div class="page-header text-center">
+  <h1><span class="fa fa-anchor"></span> Your dashboard</h1>
+</div>
+
+<div id="dashboard-offer">
+    <h2>Offer</h2>
+    <div class="row" ng-repeat="baggage in offerList | orderBy: '-time'"">
+
+        <div class="col-sm-12">
+            <div class="well">
+                    <h3 style="display:inline"><img ng-show="baggage.providerImage" ng-src="{{baggage.providerImage}}"/> <span ng-hide="baggage.providerImage" class="glyphicon glyphicon-user"></span> {{baggage.providerName}}</h3>
+                    <p>
+                        <strong>weight</strong>: {{baggage.weight}} kg<br>
+                        <strong>length</strong>: {{baggage.space[0]}}  <strong>width</strong>: {{baggage.space[1]}}  <strong>height</strong>: {{baggage.space[2]}}<br>
+                        <strong>from</strong>: {{baggage.from}}<br>
+                        <strong>accept request before(timezone of your browser)</strong>: {{baggage.accesptBefore | date: 'medium'}}<br>
+                        <strong>to</strong>: {{baggage.to}}<br>
+                        <strong>arrive after(timezone of your browser)</strong>: {{baggage.arriveAfter | date: 'medium'}}<br>
+                    </p>
+                <div ng-show="baggage.requestors.length>0">
+                    <hr style="height:1px;border:none;color:#333;background-color:#333;"><h4>requestors:</h4>
+                </div>
+                <ul>
+                    <li class="list-element-padding-top" ng-repeat="requestor in baggage.requestors">
+                        <span ng-show="requestor.image"><img  ng-src="{{requestor.image}}"/></span> <span ng-hide="requestor.image" class="glyphicon glyphicon-user"></span>  {{requestor.name}}  
+                        <button type="submit" class="btn btn-success btn-lg" ng-click="contactRequestor(baggage._id, requestor.name, requestor._id)"> Contact</button>
+                    </li>
+                </ul>
+            
+
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+<hr>
+<div id="dashboard-request">
+    <h2>Request</h2>
+    <div class="row" ng-repeat="baggage in requestList | orderBy: '-time'"">
+
+        <div class="col-sm-12">
+            <div class="well">
+                
+
+                    <h3 style="display:inline"><img ng-show="baggage.providerImage" ng-src="{{baggage.providerImage}}"/> <span ng-hide="baggage.providerImage" class="glyphicon glyphicon-user"></span> {{baggage.providerName}}</h3>
+                    <button type="submit" class="btn btn-success btn-lg" style=""ng-click="contactProvider(baggage._id, baggage.providerName, baggage.uid)"> Contact</button>
+
+                    <p>
+                        <strong>weight</strong>: {{baggage.weight}} kg<br>
+                        <strong>length</strong>: {{baggage.space[0]}}  <strong>width</strong>: {{baggage.space[1]}}  <strong>height</strong>: {{baggage.space[2]}}<br>
+                        <strong>from</strong>: {{baggage.from}}<br>
+                        <strong>accept request before(timezone of your browser)</strong>: {{baggage.accesptBefore | date: 'medium'}}<br>
+                        <strong>to</strong>: {{baggage.to}}<br>
+                        <strong>arrive after(timezone of your browser)</strong>: {{baggage.arriveAfter | date: 'medium'}}<br>
+                    </p>
+
+            </div>
+            
+        </div>
+
+    </div>
+</div>
+

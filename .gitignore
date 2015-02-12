@@ -6,3 +6,6 @@ tmp
 .DS_Store
 .idea
 *~
+.travis.yml
+.jshintrc
+.bowerrc
