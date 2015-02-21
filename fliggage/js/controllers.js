@@ -352,7 +352,7 @@ appControllers.controller('GetUserCtrl', ['$scope', '$rootScope', '$localStorage
 appControllers.controller('SigninCtrl', ['$scope', 'ENV',
   function($scope, ENV) {
     console.log("EVN:"+ENV);
-    //$scope.api-root-url = ENV.api-root-url;
+    $scope.apiRootUrl = ENV.apiRootUrl;
   }
 ]);
 

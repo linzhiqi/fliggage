@@ -4,5 +4,5 @@ angular.module('envconfig', [])
 
 .constant('ENV', {
   'name': 'development',
-  'apiRootUrl': 'http://localhost:3000'
+  'apiRootUrl': 'http://chinesemonster.serveblog.net:3000'
 });
