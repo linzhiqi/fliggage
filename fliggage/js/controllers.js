@@ -122,9 +122,6 @@ appControllers.controller('BaggageListCtrl', ['$scope', 'BaggageOnLocation',
 }]);
 
 function setAutoComplete() {
-  if(typeof google !== 'undefined') {
-    return;
-  }
  // initialize google place autocomplete
 
     var autocomplete_from;
@@ -288,7 +285,7 @@ appControllers.controller('DashboardCtrl', ['$scope', '$rootScope', 'ProviderBag
   }
 ]);
 
-appControllers.controller('AccountCtrl', ['$scope', 'BaggageOnId', '$location','$localStorage',
+appControllers.controller('BaggagePostOfferCtrl', ['$scope', 'BaggageOnId', '$location','$localStorage',
   function($scope, BaggageOnId, $location, $localStorage) {
     if(!$localStorage.token || !$localStorage.profile){
       alert('Posting offer requires signin.');
@@ -349,6 +346,13 @@ appControllers.controller('GetUserCtrl', ['$scope', '$rootScope', '$localStorage
       $rootScope.userId = user._id;
     });
     $location.path('');
+  }
+]);
+
+appControllers.controller('SigninCtrl', ['$scope', 'ENV',
+  function($scope, ENV) {
+    console.log("EVN:"+ENV);
+    //$scope.api-root-url = ENV.api-root-url;
   }
 ]);
 

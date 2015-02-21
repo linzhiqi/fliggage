@@ -8,12 +8,14 @@ angular.module('myApp', [
   'restServices',
   'ngStorage',
   'ui.bootstrap.datetimepicker',
-  'ngDialog'
+  'ngDialog',
+  'envconfig'
 ]).config(['$routeProvider', '$httpProvider', 'ngDialogProvider',
   function($routeProvider, $httpProvider, ngDialogProvider) {
     $routeProvider.
       when('/signin', {
-        templateUrl: 'view/signin.html'
+        templateUrl: 'view/signin.html',
+        controller: 'SigninCtrl'
       }).
       when('/signed-in/:token', {
         templateUrl: 'view/signed-in.html',
