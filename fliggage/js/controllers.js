@@ -27,20 +27,25 @@ appControllers.controller('HeaderCtrl', ['$scope', '$rootScope', '$location','$l
 
 appControllers.controller('BaggageListCtrl', ['$scope', 'BaggageOnLocation',
   function($scope, BaggageOnLocation) {
-   
+
+//    setAutoComplete();   
+    $scope.googleAutoCompleteOption =  {    
+      types: '(cities)'
+    };
+
     $scope.baggages = BaggageOnLocation.query();
     console.log("BaggageListCtrl triggered.");
     console.log($scope.baggages);
     //$scope.baggages = defaultBaggages;
     $scope.orderProp = 'age';
-    var fromStruct = [];
-    var toStruct = [];
-    var round1 = [];
-    var round2 = [];
+
 
     $scope.searchBaggages = function() {
       $scope.$broadcast('event:force-model-update');
-      console.log('from '+$scope.from+' to '+$scope.to);
+      var fromStruct = [];
+      var toStruct = [];
+      var round1 = [];
+      var round2 = [];
       $scope.baggages=[];
   
       fromStruct = $scope.from.split(',');
@@ -116,10 +121,9 @@ appControllers.controller('BaggageListCtrl', ['$scope', 'BaggageOnLocation',
       Array.prototype.push.apply(to, squeezed);
     }
 
-    setAutoComplete();
-
-
 }]);
+
+/**** using ngAutocomplete directive instead *****
 
 function setAutoComplete() {
  // initialize google place autocomplete
@@ -139,7 +143,7 @@ function setAutoComplete() {
   }
   function onToPlaceChanged() {
     if(autocomplete_to){
-      var place = autocomplete_to.getPlace();
+      var place = autocomplete_to.getPlace();googleAutoCompleteOption
       var formatted_address = place.formatted_address;
       console.log(formatted_address);
       document.getElementById('toLocationInput').value=formatted_address;
@@ -164,7 +168,7 @@ function setAutoComplete() {
   }();
 
 };
-
+*/
 
 appControllers.controller('BaggageDetailCtrl', ['$scope', 'BaggageOnId', '$routeParams', 'ngDialog',
   function($scope, BaggageOnId, $routeParams, ngDialog) {
@@ -304,7 +308,12 @@ appControllers.controller('BaggagePostOfferCtrl', ['$scope', 'BaggageOnId', '$lo
     }
 
     $scope.baggage={space: []};
-    setAutoComplete();
+//    setAutoComplete();
+    $scope.googleAutoCompleteOption =  {    
+      types: '(cities)'
+    };
+
+
     $scope.postBaggage = function() {
       $scope.$broadcast('event:force-model-update');
       $scope.baggage.space[0]=$scope.length;

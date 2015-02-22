@@ -9,7 +9,7 @@
         <legend>Schedule:</legend>
       <div class="form-group">
         <label class="app-input-label"for="fromLocationInput">From city </label>
-        <input type="text" class="app-input form-control" id="fromLocationInput" placeholder="city, province(optional), country" ng-model='baggage.from' force-model-update>
+        <input type="text" class="app-input form-control" id="fromLocationInput" placeholder="city, province(optional), country" ng-model='baggage.from' force-model-update  ng-autocomplete="from"  options="googleAutoCompleteOption" details="fromDetails">
       </div>
       <div class="form-group date-picker">
         <label class="app-input-label" for="acceptBeforeInput">Accept request before </label>
@@ -25,7 +25,7 @@
       </div>
       <div class="form-group">
         <label class="app-input-label" for="toLocationInput">To city </label>
-        <input type="text" class="app-input form-control" id="toLocationInput" placeholder="city, province(optional), country" ng-model='baggage.to' force-model-update>
+        <input type="text" class="app-input form-control" id="toLocationInput" placeholder="city, province(optional), country" ng-model='baggage.to' force-model-update  ng-autocomplete="to" options="googleAutoCompleteOption" details="toDetails">
       </div>
       <div class="form-group date-picker">
         <label class="app-input-label" for="arriveAfterInput">Arrive after </label>
