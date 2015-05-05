@@ -9,7 +9,8 @@ angular.module('myApp', [
   'ngStorage',
   'ui.bootstrap.datetimepicker',
   'ngDialog',
-  'envconfig'
+  'envconfig',
+  'websocketServices'
 ]).config(['$routeProvider', '$httpProvider', 'ngDialogProvider',
   function($routeProvider, $httpProvider, ngDialogProvider) {
     $routeProvider.

@@ -4,17 +4,22 @@
 
 var appControllers = angular.module('appControllers', []);
 
-appControllers.controller('HeaderCtrl', ['$scope', '$rootScope', '$location','$localStorage',
-  function($scope, $rootScope, $location, $localStorage) {
+appControllers.controller('HeaderCtrl', ['$scope', '$rootScope', '$location','$localStorage', 'socket',
+  function($scope, $rootScope, $location, $localStorage, socket) {
+  	socket.on('new_message', function(data){
+  		alert('new message: ' + data.message);
+  	});
     if($localStorage.token && $localStorage.profile) {
       console.log('localstorage is true.');
       $rootScope.signedIn = true;
       $rootScope.userName = $localStorage.profile.name;
       $rootScope.userImage = $localStorage.profile.image;  
       $rootScope.userId = $localStorage.profile._id;
+      socket.emit('new_connection', {'uid': $rootScope.userId});
     }
 
     $scope.logout = function() {
+      socket.emit('close_connection', {'uid': $rootScope.userId});
       delete $localStorage.profile;
       delete $localStorage.token;
       $rootScope.signedIn = false;
@@ -25,20 +30,17 @@ appControllers.controller('HeaderCtrl', ['$scope', '$rootScope', '$location','$l
   }]
 );
 
-appControllers.controller('BaggageListCtrl', ['$scope', 'BaggageOnLocation',
-  function($scope, BaggageOnLocation) {
+appControllers.controller('BaggageListCtrl', ['$scope', 'RecentBaggage', 'BaggageOnLocation',
+  function($scope, RecentBaggage, BaggageOnLocation) {
 
 //    setAutoComplete();   
     $scope.googleAutoCompleteOption =  {    
       types: '(cities)'
     };
 
-    $scope.baggages = BaggageOnLocation.query();
+    $scope.baggages = RecentBaggage.query();
     console.log("BaggageListCtrl triggered.");
     console.log($scope.baggages);
-    //$scope.baggages = defaultBaggages;
-    $scope.orderProp = 'age';
-
 
     $scope.searchBaggages = function() {
       $scope.$broadcast('event:force-model-update');
@@ -343,8 +345,8 @@ appControllers.controller('SignInCtrl', ['$scope', 'SignInGoogle', '$localStorag
 */
 
 
-appControllers.controller('GetUserCtrl', ['$scope', '$rootScope', '$localStorage', '$routeParams','$location', 'UserProfile',
-  function($scope, $rootScope, $localStorage, $routeParams, $location, UserProfile) {
+appControllers.controller('GetUserCtrl', ['$scope', '$rootScope', '$localStorage', '$routeParams','$location', 'UserProfile', 'socket',
+  function($scope, $rootScope, $localStorage, $routeParams, $location, UserProfile, socket) {
     console.log('token: '+$routeParams.token);
     $localStorage.token = $routeParams.token;
     UserProfile.get({}, function(user){
@@ -353,6 +355,7 @@ appControllers.controller('GetUserCtrl', ['$scope', '$rootScope', '$localStorage
       $rootScope.userName = user.name;
       $rootScope.userImage = user.image;
       $rootScope.userId = user._id;
+      socket.emit('new_connection', {'uid': user._id});
     });
     $location.path('');
   }

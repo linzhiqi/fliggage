@@ -4,7 +4,14 @@
 
 // service for requesting rest api
 var restServices = angular.module('restServices', ['ngResource']);
-var url_root = 'http://localhost:3000';
+
+restServices.factory('RecentBaggage', ['$resource', 'ENV',
+  function($resource, ENV){
+    return $resource(ENV.apiRootUrl+'/baggage', {}, {
+      query: {method:'GET', isArray:true}
+    });
+  }
+]);
 
 restServices.factory('BaggageOnLocation', ['$resource', 'ENV',
   function($resource, ENV){
@@ -70,3 +77,31 @@ restServices.factory('RequestorOnBaggage', ['$resource', 'ENV',
     }
   ]
 );
+
+
+// service for websocket
+var websocketServices = angular.module('websocketServices', []);
+
+websocketServices.factory('socket', ['$rootScope', 'ENV', function($rootScope, ENV){
+	var socket = io.connect(ENV.apiRootUrl);
+	return {
+		on: function (eventName, callback) {
+			socket.on(eventName, function(){
+				var args = arguments;
+				$rootScope.$apply(function() {
+					callback.apply(socket, args);
+				})
+			})
+		},
+		emit: function(eventName, data, callback) {
+			socket.emit(eventName, data, function() {
+				var args = arguments;
+				$rootScope.$apply(function(){
+					if(callback) {
+						callback.apply(socket, args);
+					}
+				})
+			}) 
+		}
+	}
+}]);

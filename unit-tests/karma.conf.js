@@ -7,6 +7,10 @@ module.exports = function(config){
       'fliggage/bower_components/angular/angular.js',
       'fliggage/bower_components/angular-route/angular-route.js',
       'fliggage/bower_components/angular-mocks/angular-mocks.js',
+      'fliggage/bower_components/angular-resource/angular-resource.js',
+      'fliggage/bower_components/ngstorage/ngStorage.js',
+      'fliggage/bower_components/ngDialog/js/ngDialog.js',
+      'fliggage/bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
       'fliggage/components/**/*.js',
       'fliggage/js/**/*.js',
       'unit-tests/**/*.js'
